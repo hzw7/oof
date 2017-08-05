@@ -1,7 +1,7 @@
 #!/usr/python/env python
 #
 #################################################################################################################
-# v 0.01 - orphan object finder by hubert.wisniewski@gmail.com
+# v 0.02 - orphan object finder by hubert.wisniewski@gmail.com (version with functions)
 #
 #  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 #  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -39,35 +39,56 @@ debugmode = sys.argv[2:3]
 if debugmode == ['-d']:
  debugmode = "on"
 
-f = open(filename, 'r')
-id = 0
+#table-object-network and one for function
+tonf = ton = []
 
-#table-object-network
-ton = []
+#table-object-group-network and one for function
+tognf = togn = []
 
-#table-object-group-network
-togn = []
+#table tmp in function
+tabletmp = []
 
+#function definition - open file
+def openfile(p1,p2):
+ f = open(p1, p2)
+ return f
 
-for line in f:
- id = id + 1
- eol = len(line)-1
+#function definition - read file
+def readfile(filen,objecttype,objectstart,objectend,linelenght,tabletmp):
+ for line in filen:
+  eol = len(line)-1
+  if line[objectstart:objectend] == objecttype:
+   onn = line[linelenght:eol]
+   tabletmp.append([onn])
+   if debugmode == "on":
+    print line[objectstart:objectend] + ' ->' + objecttype + ' ' + onn
+ return tabletmp
 
-
- if line[0:14] == 'object network':
-# object network name
-  onn = line[15:eol]
-  ton.append([id,onn])
+#function definition - remove duplicates
+def removeduplicates(tab1,tab2):
+ for i in tab1:
   if debugmode == "on":
-   print line[0:14] + ' -> OBJECT NAME: ' + onn
+#  print (str(tab1) +" i\n")
+   print i[0]+"\n"
+  for j in tab2:
+   if debugmode == "on":
+#    print (str(tab2)+" j\n")
+    print j[0]+"\n"
+   if i[0] == j[0]:
+    tab2.remove(j)
+    if debugmode == "on":
+     print('removed\n')
+ return tab2
 
+#main function start here:
 
- if line[1:22] == 'network-object object':
-# network object object name
-  noon = line[23:eol]
-  togn.append([id,noon])
-  if debugmode == "on":
-   print '|-'+line[1:22] +' -> NETWORK-OBJECT OBJECT NAME: '+ noon
+#call function - open file and return f
+f = openfile(filename,'r')
+ton = readfile(f,'object network',0,14,15,tonf)
+
+#call function - open file and return f
+f = openfile(filename,'r')
+togn = readfile(f,'network-object object',1,22,23,tognf)
 
 if debugmode == "on":
  print '\n\nNetwork-object table:'
@@ -81,21 +102,8 @@ if debugmode == "on":
  for i in ton:
   print i
 
-
-for i in togn:
- if debugmode == "on":
-  print ("togn i")
-  print i[1]
- for j in ton:
-  if debugmode == "on":
-   print ("ton j")
-   print j[1]
-  if i[1] == j[1]:
-   ton.remove(j)
-   if debugmode == "on":
-    print('removed\n')
+ton = removeduplicates(togn,ton)
 
 print("Orphan objects:")
-
 for i in ton:
  print i
