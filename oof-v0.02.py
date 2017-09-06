@@ -1,7 +1,7 @@
 #!/usr/python/env python
 #
 #################################################################################################################
-# v 0.02 - orphan object finder by hubert.wisniewski@gmail.com (version with functions)
+# v 0.02 - orphaned object finder by hubert.wisniewski@gmail.com (version with functions)
 #
 #  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 #  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -104,6 +104,6 @@ if debugmode == "on":
 
 ton = removeduplicates(togn,ton)
 
-print("Orphan objects:")
+print("Orphaned objects:")
 for i in ton:
  print i
